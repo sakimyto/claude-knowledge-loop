@@ -156,16 +156,34 @@ Rules:
 - Select the highest-impact items across all categories
 - Always include a reference to the full knowledge base file
 
-### 7. Report
+### 7. Health Check
+
+After updating, run diagnostics on the overall system:
+
+| Check | Threshold | Action |
+|-------|-----------|--------|
+| CLAUDE.md total line count | > 150 lines | Warn: "CLAUDE.md is {n} lines. Research shows instruction adherence degrades beyond 150 lines. Consider pruning." |
+| knowledge-loop section size | > `max_claude_md_lines` | Error: trim to limit |
+| knowledge-base.md entry age | > 90 days since `last_updated` without change | Warn per entry: "'{entry}' has not been reviewed in {n} days." |
+| Total entries across all categories | > `max_items_per_category` x category count | Info: utilization percentage |
+| Codebase inferability spot-check | Sample 2-3 entries | For each, briefly check if the project codebase now makes this knowledge obvious. If so, flag: "'{entry}' may now be inferable from code — consider removing." |
+
+### 8. Report
 
 Report to the user:
 
+**Extraction results:**
 - Number of notes scanned
 - New entries added (with category breakdown)
 - Entries updated
 - Duplicates skipped
 - Any items removed due to category limits
-- Staleness warnings for entries older than 90 days (recommend review)
+
+**Health check:**
+- CLAUDE.md line count (with warning if > 150)
+- Stale entries (> 90 days without review)
+- Entries that may now be inferable from code
+- Knowledge base utilization (entries / max capacity)
 
 ## Custom Categories
 
