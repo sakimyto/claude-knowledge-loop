@@ -9,7 +9,7 @@
     "knowledge_base": "~/.claude/docs/knowledge-base.md",
     "claude_md": "~/.claude/CLAUDE.md",
     "claude_md_section": "Domain Knowledge (auto-updated)",
-    "max_claude_md_lines": 8,
+    "max_claude_md_lines": 5,
     "max_items_per_category": 8
   },
   "categories": [

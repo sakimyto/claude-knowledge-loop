@@ -2,12 +2,18 @@
 
 How to identify and extract domain knowledge from notes.
 
-## The Litmus Test
+## The Litmus Tests
 
-> "If the model were 10x smarter, would I still need to tell it this?"
+Every extraction candidate must pass **both** tests:
 
-- **Yes** → Extract it. This is domain knowledge.
-- **No** → Skip it. The model will figure it out.
+> **Test 1**: "If the model were 10x smarter, would I still need to tell it this?"
+>
+> **Test 2**: "Could the model figure this out by reading the codebase?"
+
+- Test 1 = Yes **AND** Test 2 = No → **Extract it.** This is domain knowledge.
+- Either test fails → **Skip it.**
+
+Test 1 filters out model-dependent tips. Test 2 filters out knowledge that's already encoded in code.
 
 ## Default Categories
 
@@ -29,6 +35,7 @@ How to identify and extract domain knowledge from notes.
 **Not this**:
 - "React is a good framework" (generic knowledge)
 - "We use TypeScript" (trivially observable from code)
+- "We prefer composition over inheritance" (inferable from reading the codebase)
 
 ---
 
@@ -117,6 +124,8 @@ Each custom category should follow the same pattern:
 3. Concrete examples
 4. Anti-patterns (what doesn't belong)
 
+**Cross-category knowledge**: If an item fits multiple categories, place it in the single best-fit category. Don't duplicate.
+
 ## Anti-Patterns: What NOT to Extract
 
 | Don't extract | Why |
@@ -128,6 +137,7 @@ Each custom category should follow the same pattern:
 | Generic best practices | The model already knows these |
 | Temporary workarounds | Should be fixed, not documented as knowledge |
 | Personal opinions without evidence | Not actionable for an LLM |
+| Patterns inferable from codebase | The model can discover these by reading code |
 
 ## Writing Good Entries
 
@@ -144,3 +154,14 @@ Each custom category should follow the same pattern:
 - Missing context or rationale
 - Multi-paragraph explanations (put those in docs instead)
 - Duplicates something the model would know from reading the codebase
+
+## Quarterly Review
+
+Every 90 days, review your `knowledge-base.md`:
+
+1. **Remove stale entries** — Decisions that were reversed, rules that changed, tools that were replaced
+2. **Remove now-inferable entries** — If the codebase now clearly shows a pattern, the explicit entry may be redundant
+3. **Merge converged entries** — Multiple entries that evolved into a single principle
+4. **Update rationale** — If the "why" has changed even though the "what" hasn't
+
+Stale knowledge is worse than no knowledge — it actively misleads the model.

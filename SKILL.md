@@ -7,7 +7,11 @@ description: "Extract domain knowledge from your notes and feed it back into CLA
 
 Extract domain knowledge from notes and update `knowledge-base.md` + CLAUDE.md automatically.
 
-**Core principle**: Extract knowledge that remains valuable regardless of how smart the model becomes. If the model were 10x smarter, would it still need this information? If yes, extract it.
+**Core principle**: Extract knowledge that the model cannot infer from the codebase or public data, regardless of how smart it becomes.
+
+Two litmus tests — both must pass:
+1. "If the model were 10x smarter, would I still need to tell it this?" → Yes
+2. "Could the model figure this out by reading the codebase?" → No
 
 ## Execution Flow
 
@@ -27,7 +31,7 @@ Read `~/.claude/knowledge-loop.json`. If missing, instruct the user to run `setu
     "knowledge_base": "~/.claude/docs/knowledge-base.md",
     "claude_md": "~/.claude/CLAUDE.md",
     "claude_md_section": "Domain Knowledge (auto-updated)",
-    "max_claude_md_lines": 8,
+    "max_claude_md_lines": 5,
     "max_items_per_category": 8
   },
   "categories": [
@@ -65,7 +69,9 @@ Read each new note and extract knowledge that matches the configured categories.
 | `technical-decisions` | Technology choices and their reasons (ADR-like). Migration decisions. |
 | `quality-criteria` | Personal quality standards. Definition of "done". Review criteria. |
 
-**Extraction litmus test**: "If the model were 10x smarter, would I still need to tell it this?" → Yes = extract.
+**Extraction litmus tests** (both must pass):
+1. "If the model were 10x smarter, would I still need to tell it this?" → Yes
+2. "Could the model figure this out by reading the codebase?" → No
 
 **Anti-patterns (DO NOT extract):**
 
@@ -74,6 +80,7 @@ Read each new note and extract knowledge that matches the configured categories.
 - One-time events or meeting notes
 - Generic industry knowledge the model already knows
 - Subjective opinions without actionable implications
+- Design patterns inferable from the codebase (e.g., "we use composition" when the code shows it)
 
 **Language**: Use the language specified in config (`language` field).
 
@@ -135,7 +142,7 @@ Update the auto-managed section in the configured `claude_md` path.
 <!-- knowledge-loop:start -->
 ## Domain Knowledge (auto-updated)
 
-- Most impactful items here (max 8 lines)
+- Most impactful items here (max 5 lines)
 - See `docs/knowledge-base.md` for full list
 
 <!-- knowledge-loop:end -->
@@ -145,7 +152,7 @@ Rules:
 - If markers exist, replace content between them
 - If markers don't exist, append the section at the end of the file
 - Use the section name from `claude_md_section` config
-- Limit to `max_claude_md_lines` lines (default 8)
+- Limit to `max_claude_md_lines` lines (default 5)
 - Select the highest-impact items across all categories
 - Always include a reference to the full knowledge base file
 
@@ -158,6 +165,7 @@ Report to the user:
 - Entries updated
 - Duplicates skipped
 - Any items removed due to category limits
+- Staleness warnings for entries older than 90 days (recommend review)
 
 ## Custom Categories
 
@@ -177,6 +185,19 @@ Users can add custom categories in `knowledge-loop.json`:
 ```
 
 Each category will become a section in `knowledge-base.md`.
+
+Knowledge that spans multiple categories should go in the single best-fit category. Don't duplicate across categories.
+
+## Quarterly Review
+
+Every 90 days (or when entry count approaches limits), review the knowledge base:
+
+- Remove entries that are now inferable from the codebase
+- Remove entries for deprecated decisions
+- Merge entries that have converged into a single principle
+- Update entries where the rationale has changed
+
+The skill will warn about entries older than 90 days during the report step.
 
 ## Notes
 

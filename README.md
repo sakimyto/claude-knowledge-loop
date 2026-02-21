@@ -21,12 +21,15 @@ Your head contains knowledge that no model can guess: why you chose this archite
 - **Not a RAG system** — This produces a curated, human-readable knowledge base, not vector embeddings.
 - **Not automatic** — It extracts candidates; you review and refine.
 
-## The Litmus Test
+## The Litmus Tests
 
-> "If the model were 10x smarter, would I still need to tell it this?"
+Every candidate must pass **both**:
 
-- **Yes** → Domain knowledge. Extract it.
-- **No** → The model will figure it out. Skip it.
+> **Test 1**: "If the model were 10x smarter, would I still need to tell it this?"
+> **Test 2**: "Could the model figure this out by reading the codebase?"
+
+- Test 1 = Yes **AND** Test 2 = No → Extract it.
+- Either fails → Skip.
 
 ## Install
 
@@ -105,7 +108,7 @@ The skill will:
     "knowledge_base": "~/.claude/docs/knowledge-base.md",
     "claude_md": "~/.claude/CLAUDE.md",
     "claude_md_section": "Domain Knowledge (auto-updated)",
-    "max_claude_md_lines": 8,
+    "max_claude_md_lines": 5,
     "max_items_per_category": 8
   },
   "categories": [
@@ -177,7 +180,8 @@ See [`references/extraction-guide.md`](references/extraction-guide.md) for detai
 ┌─────────────────────────────────────────┐
 │         Extract & Categorize            │
 │  "10x smarter model still needs this?"  │
-│  Yes → extract  /  No → skip            │
+│  "Inferable from codebase?"             │
+│  Yes + No → extract  /  else → skip     │
 └──────────────┬──────────────────────────┘
                │
         ┌──────┴──────┐
@@ -188,6 +192,10 @@ See [`references/extraction-guide.md`](references/extraction-guide.md) for detai
 │ (full list)  │ │  section only)       │
 └──────────────┘ └──────────────────────┘
 ```
+
+## Maintenance
+
+Review your `knowledge-base.md` every 90 days. The skill warns about stale entries during extraction. Stale knowledge actively misleads the model — prune ruthlessly.
 
 ## License
 
