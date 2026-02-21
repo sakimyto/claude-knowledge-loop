@@ -1,0 +1,23 @@
+{
+  "source": {
+    "directory": "~/notes/daily",
+    "pattern": "*.md",
+    "date_field": "filename",
+    "date_format": "YYYYMMDD_*"
+  },
+  "output": {
+    "knowledge_base": "~/.claude/docs/knowledge-base.md",
+    "claude_md": "~/.claude/CLAUDE.md",
+    "claude_md_section": "Domain Knowledge (auto-updated)",
+    "max_claude_md_lines": 8,
+    "max_items_per_category": 8
+  },
+  "categories": [
+    "design-principles",
+    "business-rules",
+    "technical-decisions",
+    "quality-criteria"
+  ],
+  "language": "en",
+  "search_keywords": []
+}
