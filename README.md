@@ -1,5 +1,9 @@
 # claude-knowledge-loop
 
+> **Status: Experimental / Not actively maintained**
+>
+> This was built as a proof of concept. After using it, I concluded that the core value is the **litmus tests as a mental model**, not the tooling itself. For most people, manually applying the two tests below when editing CLAUDE.md is sufficient — a dedicated skill adds complexity without proportional benefit. Leaving this public as a reference.
+
 Extract domain knowledge from your notes and feed it back into Claude Code.
 
 ```
